@@ -25,7 +25,7 @@ const login = async (req, res) => {
       };
     }
 
-    const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
+    const token = jwt.sign(check.dataValues, process.env.APP_SECRET_KEY, {
       expiresIn: "24h",
     });
 
@@ -73,6 +73,12 @@ const registerRecruiter = async (req, res) => {
       const insertUser = await model.users.create({
         ...req.body,
         ...{ password: hash, recruiter_id: insertRecruiter?.id },
+      });
+
+      // insert into db
+      await model.user_detail.create({
+        ...req.body,
+        ...{ user_id: insertUser?.id },
       });
 
       res.status(201).json({
