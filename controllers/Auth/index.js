@@ -2,121 +2,85 @@ require("dotenv").config();
 const model = require("../../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(10);
 
-module.exports = {
-  // post auth/login
-  login: (req, res) => {
-    const { email, password } = req.body;
+const login = async (req, res) => {
+  try {
+    const check = await model.users.findOne({
+      where: { email: req?.body?.email },
+    });
 
-    model.users
-      .findOne({
-        where: { email: email },
-      })
-      .then((result) => {
-        if (!result) throw new Error("User not existt");
+    if (!check) {
+      throw {
+        message: "Email not registered.",
+        code: 400,
+      };
+    }
 
-        if (result && result.dataValues.is_login) {
-          throw new Error("User already login");
-        }
+    const compare = await bcrypt.compare(req?.body?.password, check?.password);
 
-        return result;
-      })
-      .then((result) => {
-        const compare = bcrypt.compareSync(
-          password,
-          result.dataValues.password
-        );
-        if (!compare) throw new Error("Wrong password");
+    if (!compare) {
+      throw {
+        message: "Incorrect Password",
+        code: 400,
+      };
+    }
 
-        model.users
-          .update({ is_login: 1 }, { where: { email } })
-          .then((status) => {
-            if (!status[0]) throw new Error("Something wrong");
+     const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
+       expiresIn: "24h",
+     });
 
-            const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
-              expiresIn: "24h",
-            });
-
-            res.json({
-              status: "OK",
-              messages: "",
-              data: {
-                token: token,
-                result,
-              },
-            });
-          });
-      })
-      .catch((error) =>
-        res.status(401).json({
-          status: "ERROR",
-          messages: error.message,
-          data: null,
-        })
-      );
-  },
-
-  // post auth/register
-  register: (req, res) => {
-    const requestBody = req.body;
-
-    model.users
-      .findOne({
-        where: { email: requestBody.email },
-      })
-      .then((result) => {
-        if (result) throw new Error("User already registered");
-
-        const hashPassword = bcrypt.hashSync(requestBody.password, bcryptSalt);
-
-        return model.users.create({
-          ...requestBody,
-          ...{
-            password: hashPassword,
-            is_login: 0,
-          },
-        });
-      })
-      .then((result) => {
-        if (!result) throw new Error("Failed insert data");
-
-        res.status(201).json({
-          status: "OK",
-          messages: "insert success",
-          data: null,
-        });
-      })
-      .catch((error) =>
-        res.status(400).json({
-          status: "ERROR",
-          messages: error.message || "Something wrong",
-          data: null,
-        })
-      );
-  },
-
-  // get auth/logout
-  logout: (req, res) => {
-    const { id } = req.params;
-
-    model.users
-      .update({ is_login: 0 }, { where: { id } })
-      .then((result) => {
-        if (!result[0]) throw new Error("Failed logout");
-
-        res.json({
-          status: "OK",
-          messages: "Logout success",
-          data: null,
-        });
-      })
-      .catch((error) =>
-        res.status(400).json({
-          status: "ERROR",
-          messages: error.message,
-          data: null,
-        })
-      );
-  },
+    res.status(201).json({
+      messages: "data ada",
+      data: check,
+      token: token,
+    });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
 };
+
+const registerRecruiter = async (req, res) => {
+  try {
+    const check = await model.users.findOne({
+      where: { email: req?.body?.email },
+    });
+
+    if (check) {
+      throw {
+        message: "Email already registered.",
+        code: 400,
+      };
+    }
+
+    // hash password
+    bcrypt.hash(req?.body?.password, 10, async (err, hash) => {
+      if (err) {
+        throw {
+          message: "Something Error in server",
+          code: 500,
+        };
+      }
+
+      // insert into db
+      await model.users.create({
+        ...req.body,
+        ...{ password: hash },
+      });
+
+      res.status(201).json({
+        messages: "insert success",
+        data: check,
+      });
+    });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
+};
+
+module.exports = { login, registerRecruiter };

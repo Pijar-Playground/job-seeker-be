@@ -7,8 +7,7 @@ const cache = (req, res, next, result) => {
     rules.check().then((matched) => {
       if (!matched) {
         res.status(422).json({
-          status: "ERROR",
-          messages: rules.errors,
+          message: rules.errors,
           data: null,
         });
       } else {

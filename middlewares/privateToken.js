@@ -18,7 +18,6 @@ const authMiddleware = (req, res, next) => {
     }
   } catch (err) {
     res.status(401).json({
-      status: "ERROR",
       messages: err.message,
       data: null,
     });

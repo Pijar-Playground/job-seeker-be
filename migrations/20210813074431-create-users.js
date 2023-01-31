@@ -8,14 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      fullname: {
+        type: Sequelize.STRING,
+      },
       email: {
         type: Sequelize.STRING,
       },
       password: {
         type: Sequelize.STRING,
       },
-      is_login: {
-        type: Sequelize.BOOLEAN,
+      phone_number: {
+        type: Sequelize.STRING,
+      },
+      recruiter_id: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

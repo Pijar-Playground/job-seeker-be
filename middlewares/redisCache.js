@@ -11,7 +11,6 @@ const cache = (req, res, next) => {
       if (error) throw error;
       if (result !== null) {
         return res.json({
-          status: "OK",
           messages: "Cached",
           cache: true,
           data: JSON.parse(result),
