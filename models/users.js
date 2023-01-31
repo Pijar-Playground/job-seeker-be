@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       phone_number: DataTypes.STRING,
       recruiter_id: DataTypes.INTEGER,
+      photo_profile: DataTypes.STRING,
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

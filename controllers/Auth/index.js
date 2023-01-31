@@ -25,9 +25,9 @@ const login = async (req, res) => {
       };
     }
 
-     const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
-       expiresIn: "24h",
-     });
+    const token = jwt.sign(req.body, process.env.APP_SECRET_KEY, {
+      expiresIn: "24h",
+    });
 
     res.status(201).json({
       messages: "data ada",
@@ -65,14 +65,19 @@ const registerRecruiter = async (req, res) => {
       }
 
       // insert into db
-      await model.users.create({
+      const insertRecruiter = await model.recruiter.create({
         ...req.body,
-        ...{ password: hash },
+      });
+
+      // insert into db
+      const insertUser = await model.users.create({
+        ...req.body,
+        ...{ password: hash, recruiter_id: insertRecruiter?.id },
       });
 
       res.status(201).json({
         messages: "insert success",
-        data: check,
+        data: insertUser,
       });
     });
   } catch (error) {

@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   recruiter.init({
     company: DataTypes.STRING,
     position: DataTypes.STRING,
-    user_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'recruiter',
