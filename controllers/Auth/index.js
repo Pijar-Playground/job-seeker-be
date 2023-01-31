@@ -30,7 +30,7 @@ const login = async (req, res) => {
     });
 
     res.status(201).json({
-      messages: "data ada",
+      messages: "Login success",
       data: check,
       token: token,
     });

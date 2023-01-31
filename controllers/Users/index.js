@@ -1,5 +1,7 @@
 const model = require("../../models");
 const jwt = require("jsonwebtoken");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const getProfile = async (req, res) => {
   try {
@@ -17,7 +19,7 @@ const getProfile = async (req, res) => {
       },
     });
 
-    const project = await model.user_detail.findAll({
+    const result = await model.user_detail.findAll({
       where: { id: decode?.id },
       include: [
         {
@@ -28,8 +30,8 @@ const getProfile = async (req, res) => {
     });
 
     res.status(200).json({
-      messages: "data ada",
-      data: project,
+      messages: "get data sucess",
+      data: result,
     });
   } catch (error) {
     res.status(error?.code ?? 500).json({
@@ -52,9 +54,10 @@ const getProfileList = async (req, res) => {
     const limit = req?.query?.limit ?? 5;
     const sortBy = req?.query?.sortBy ?? "id";
     const order = req?.query?.order ?? "DESC";
+    const keyword = req?.query?.keyword ?? "";
 
     const isValidOrder = ["DESC", "ASC"].find((item) => item === order);
-    const isValidSort = ["id", "name", "skills", "domicile", "job"].find(
+    const isValidSort = ["id", "skills", "domicile", "job"].find(
       (item) => item === sortBy
     );
 
@@ -76,7 +79,7 @@ const getProfileList = async (req, res) => {
 
     if (!isValidSort) {
       throw {
-        message: `Invalid order sort by (id, name, skill, lokasi, job) Only`,
+        message: `Invalid order sort by (id, skills, domicile, job) Only`,
         code: 400,
       };
     }
@@ -88,6 +91,11 @@ const getProfileList = async (req, res) => {
           attributes: { exclude: ["password"] },
         },
       ],
+      where: {
+        skills: {
+          [Op.like]: `%${keyword}%`,
+        },
+      },
       order: [configOrder],
       offset: page,
       limit: limit,

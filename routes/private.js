@@ -6,5 +6,6 @@ module.exports = [
     path: `${version}/user/profile`,
     controllers: require("../controllers/Users").getProfile,
     method: "get",
+    cache: true,
   },
 ];
