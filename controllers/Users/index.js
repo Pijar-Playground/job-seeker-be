@@ -104,11 +104,18 @@ const getProfileList = async (req, res) => {
       order: [configOrder],
       offset: page,
       limit: limit,
+      raw: true,
     });
 
     res.status(200).json({
       messages: "data ada",
-      data: project,
+      data: {
+        count: project?.count,
+        rows: project.rows?.map((item) => ({
+          ...item,
+          ...{ skills: JSON.parse(item?.skills) },
+        })),
+      },
     });
   } catch (error) {
     res.status(error?.code ?? 500).json({
