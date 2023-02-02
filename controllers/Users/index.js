@@ -89,6 +89,11 @@ const getProfileList = async (req, res) => {
         {
           model: model.users,
           attributes: { exclude: ["password"] },
+          where: {
+            recruiter_id: {
+              [Op.eq]: 0,
+            },
+          },
         },
       ],
       where: {
@@ -113,4 +118,40 @@ const getProfileList = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, getProfileList };
+const getProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    model.user_detail.belongsTo(model.users, {
+      foreignKey: {
+        name: "user_id",
+        allowNull: true,
+      },
+    });
+
+    const result = await model.user_detail.findAll({
+      where: { id },
+      include: [
+        {
+          model: model.users,
+          attributes: { exclude: ["password"] },
+          where: {
+            recruiter_id: 0,
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({
+      messages: result?.length ? "Get data sucess" : "Data not found",
+      data: result,
+    });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
+};
+
+module.exports = { getProfile, getProfileList, getProfileById };

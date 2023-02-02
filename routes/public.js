@@ -14,14 +14,13 @@ module.exports = [
     validator: require("../controllers/Auth/validator").registerRecruiter,
     method: "post",
   },
-  {
-    path: `${version}/auth/register`,
-    controllers: require("../controllers/Auth").registerRecruiter,
-    validator: require("../controllers/Auth/validator").registerRecruiter,
-    method: "post",
-  },
 
-  // job
+  // users
+  {
+    path: `${version}/user/detail/:id`,
+    controllers: require("../controllers/Users").getProfileById,
+    method: "get",
+  },
   {
     path: `${version}/user/list`,
     controllers: require("../controllers/Users").getProfileList,
