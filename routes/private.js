@@ -6,6 +6,11 @@ module.exports = [
     path: `${version}/user/profile`,
     controllers: require("../controllers/Users").getProfile,
     method: "get",
-    cache: true,
+  },
+  {
+    path: `${version}/user/send-invitation`,
+    controllers: require("../controllers/Users").sendInvitation,
+    validator: require("../controllers/Users/validator").sendInvitation,
+    method: "post",
   },
 ];

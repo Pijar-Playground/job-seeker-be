@@ -154,4 +154,23 @@ const getProfileById = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, getProfileList, getProfileById };
+const sendInvitation = async (req, res) => {
+  try {
+    // insert into db
+    const insertInvitation = await model.hire_history.create({
+      ...req.body,
+    });
+
+    res.status(201).json({
+      messages: "insert success",
+      data: insertInvitation,
+    });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
+};
+
+module.exports = { getProfile, getProfileList, getProfileById, sendInvitation };
