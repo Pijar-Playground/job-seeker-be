@@ -98,7 +98,7 @@ const getProfileList = async (req, res) => {
       ],
       where: {
         skills: {
-          [Op.like]: `%${keyword}%`,
+          [Op.iLike]: `%${keyword}%`,
         },
       },
       order: [configOrder],
