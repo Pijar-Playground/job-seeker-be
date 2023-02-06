@@ -163,9 +163,17 @@ const getProfileById = async (req, res) => {
 
 const sendInvitation = async (req, res) => {
   try {
+    const authorization = req.headers.authorization;
+
+    const decode = jwt.verify(
+      authorization.slice(6).trim(),
+      process.env.APP_SECRET_KEY
+    );
+
     // insert into db
     const insertInvitation = await model.hire_history.create({
       ...req.body,
+      ...{ recruiter_id: decode?.id },
     });
 
     res.status(201).json({

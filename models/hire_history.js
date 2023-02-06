@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   hire_history.init(
     {
       user_id: DataTypes.INTEGER,
+      recruiter_id: DataTypes.INTEGER,
       description: DataTypes.STRING,
       phone_number: DataTypes.STRING,
       purpose: DataTypes.STRING,

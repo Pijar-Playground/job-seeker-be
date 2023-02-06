@@ -14,6 +14,12 @@ module.exports = [
     validator: require("../controllers/Auth/validator").registerRecruiter,
     method: "post",
   },
+  {
+    path: `${version}/auth/register`,
+    controllers: require("../controllers/Auth").register,
+    validator: require("../controllers/Auth/validator").register,
+    method: "post",
+  },
 
   // users
   {

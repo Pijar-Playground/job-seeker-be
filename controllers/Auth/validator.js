@@ -11,4 +11,10 @@ module.exports = {
     phone_number: "required|phoneNumber",
     password: "required|minLength:8",
   },
+  register: {
+    fullname: "string|required",
+    email: "email|required",
+    phone_number: "required|phoneNumber",
+    password: "required|minLength:8",
+  },
 };

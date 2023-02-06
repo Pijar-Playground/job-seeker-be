@@ -12,6 +12,9 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
       },
+      recruiter_id: {
+        type: Sequelize.INTEGER,
+      },
       description: {
         type: Sequelize.STRING,
       },
