@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
+// GET
 const getProfile = async (req, res) => {
   try {
     const authorization = req.headers.authorization;
@@ -161,6 +162,7 @@ const getProfileById = async (req, res) => {
   }
 };
 
+// POST
 const sendInvitation = async (req, res) => {
   try {
     const authorization = req.headers.authorization;
@@ -188,4 +190,60 @@ const sendInvitation = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, getProfileList, getProfileById, sendInvitation };
+// UPDATE
+const updateProfile = async (req, res) => {
+  try {
+    const authorization = req.headers.authorization;
+
+    const decode = jwt.verify(
+      authorization.slice(6).trim(),
+      process.env.APP_SECRET_KEY
+    );
+
+    const removeEmpty = (obj) => {
+      Object.keys(obj).forEach(
+        (k) => !obj[k] && obj[k] !== undefined && delete obj[k]
+      );
+      return obj;
+    };
+
+    let secureUpdate = removeEmpty(req.body);
+
+    if (secureUpdate.fullname) {
+      await model.users.update(
+        {
+          fullname: secureUpdate.fullname,
+        },
+        {
+          where: {
+            id: decode.id,
+          },
+        }
+      );
+    }
+
+    await model.user_detail.update(secureUpdate, {
+      where: {
+        user_id: decode.id,
+      },
+    });
+
+    res.status(201).json({
+      messages: "update data sucess",
+      data: req.body,
+    });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
+};
+
+module.exports = {
+  getProfile,
+  getProfileList,
+  getProfileById,
+  sendInvitation,
+  updateProfile,
+};

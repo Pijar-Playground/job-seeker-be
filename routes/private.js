@@ -8,6 +8,12 @@ module.exports = [
     method: "get",
   },
   {
+    path: `${version}/user/profile`,
+    controllers: require("../controllers/Users").updateProfile,
+    validator: require("../controllers/Users/validator").updateProfile,
+    method: "patch",
+  },
+  {
     path: `${version}/user/send-invitation`,
     controllers: require("../controllers/Users").sendInvitation,
     validator: require("../controllers/Users/validator").sendInvitation,
