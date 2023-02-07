@@ -25,4 +25,10 @@ module.exports = [
     validator: require("../controllers/Users/validator").sendInvitation,
     method: "post",
   },
+  {
+    path: `${version}/user/portfolio`,
+    controllers: require("../controllers/Portfolios").addPortfolio,
+    validator: require("../controllers/Portfolios/validator").addPortfolio,
+    method: "post",
+  },
 ];

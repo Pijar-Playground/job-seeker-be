@@ -20,12 +20,22 @@ const getProfile = async (req, res) => {
       },
     });
 
+    model.user_detail.hasMany(model.portfolio, {
+      foreignKey: {
+        name: "user_id",
+      },
+    });
+
     const result = await model.user_detail.findAll({
       where: { id: decode?.id },
       include: [
         {
           model: model.users,
           attributes: { exclude: ["password"] },
+        },
+        {
+          model: model.portfolio,
+          attributes: { exclude: ["user_id"] },
         },
       ],
     });
@@ -85,7 +95,7 @@ const getProfileList = async (req, res) => {
       };
     }
 
-    const project = await model.user_detail.findAndCountAll({
+    const result = await model.user_detail.findAndCountAll({
       include: [
         {
           model: model.users,
@@ -111,9 +121,9 @@ const getProfileList = async (req, res) => {
     res.status(200).json({
       messages: "data ada",
       data: {
-        count: project?.count,
-        totalPage: Math.ceil(project?.count / limit),
-        rows: project.rows?.map((item) => ({
+        count: result?.count,
+        totalPage: Math.ceil(result?.count / limit),
+        rows: result.rows?.map((item) => ({
           ...item,
           ...{ skills: JSON.parse(item?.skills) },
         })),
@@ -138,6 +148,12 @@ const getProfileById = async (req, res) => {
       },
     });
 
+    model.user_detail.hasMany(model.portfolio, {
+      foreignKey: {
+        name: "user_id",
+      },
+    });
+
     const result = await model.user_detail.findAll({
       where: { id },
       include: [
@@ -147,6 +163,10 @@ const getProfileById = async (req, res) => {
           where: {
             recruiter_id: 0,
           },
+        },
+        {
+          model: model.portfolio,
+          attributes: { exclude: ["user_id"] },
         },
       ],
     });
