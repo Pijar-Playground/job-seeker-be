@@ -112,6 +112,7 @@ const getProfileList = async (req, res) => {
       messages: "data ada",
       data: {
         count: project?.count,
+        totalPage: Math.ceil(project?.count / limit),
         rows: project.rows?.map((item) => ({
           ...item,
           ...{ skills: JSON.parse(item?.skills) },
