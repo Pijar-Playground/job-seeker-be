@@ -51,8 +51,8 @@ const getProfileList = async (req, res) => {
       },
     });
 
-    const page = (req?.query?.page ?? 1) - 1;
     const limit = req?.query?.limit ?? 5;
+    const page = ((req?.query?.page ?? 1) - 1) * limit;
     const sortBy = req?.query?.sortBy ?? "id";
     const order = req?.query?.order ?? "DESC";
     const keyword = req?.query?.keyword ?? "";
@@ -84,6 +84,8 @@ const getProfileList = async (req, res) => {
         code: 400,
       };
     }
+
+    console.log(page);
 
     const project = await model.user_detail.findAndCountAll({
       include: [
@@ -232,6 +234,31 @@ const updateProfile = async (req, res) => {
       messages: "update data sucess",
       data: req.body,
     });
+  } catch (error) {
+    res.status(error?.code ?? 500).json({
+      messages: error?.message ?? "Something error on server",
+      data: null,
+    });
+  }
+};
+
+const updateSkills = async (req, res) => {
+  try {
+    const authorization = req.headers.authorization;
+
+    const decode = jwt.verify(
+      authorization.slice(6).trim(),
+      process.env.APP_SECRET_KEY
+    );
+
+    await model.user_detail.update(
+      {},
+      {
+        where: {
+          user_id: decode.id,
+        },
+      }
+    );
   } catch (error) {
     res.status(error?.code ?? 500).json({
       messages: error?.message ?? "Something error on server",
