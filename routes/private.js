@@ -31,4 +31,10 @@ module.exports = [
     validator: require("../controllers/Portfolios/validator").addPortfolio,
     method: "post",
   },
+  {
+    path: `${version}/user/work-experience`,
+    controllers: require("../controllers/WorkExperience").addWorkExp,
+    validator: require("../controllers/WorkExperience/validator").addWorkExp,
+    method: "post",
+  },
 ];

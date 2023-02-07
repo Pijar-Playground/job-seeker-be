@@ -26,6 +26,12 @@ const getProfile = async (req, res) => {
       },
     });
 
+    model.user_detail.hasMany(model.work_experience, {
+      foreignKey: {
+        name: "user_id",
+      },
+    });
+
     const result = await model.user_detail.findAll({
       where: { id: decode?.id },
       include: [
@@ -35,6 +41,10 @@ const getProfile = async (req, res) => {
         },
         {
           model: model.portfolio,
+          attributes: { exclude: ["user_id"] },
+        },
+        {
+          model: model.work_experience,
           attributes: { exclude: ["user_id"] },
         },
       ],
@@ -154,6 +164,12 @@ const getProfileById = async (req, res) => {
       },
     });
 
+    model.user_detail.hasMany(model.work_experience, {
+      foreignKey: {
+        name: "user_id",
+      },
+    });
+
     const result = await model.user_detail.findAll({
       where: { id },
       include: [
@@ -166,6 +182,10 @@ const getProfileById = async (req, res) => {
         },
         {
           model: model.portfolio,
+          attributes: { exclude: ["user_id"] },
+        },
+        {
+          model: model.work_experience,
           attributes: { exclude: ["user_id"] },
         },
       ],
