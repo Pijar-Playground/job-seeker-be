@@ -14,6 +14,12 @@ module.exports = [
     method: "patch",
   },
   {
+    path: `${version}/user/skills`,
+    controllers: require("../controllers/Users").updateSkills,
+    validator: require("../controllers/Users/validator").updateSkills,
+    method: "patch",
+  },
+  {
     path: `${version}/user/send-invitation`,
     controllers: require("../controllers/Users").sendInvitation,
     validator: require("../controllers/Users/validator").sendInvitation,

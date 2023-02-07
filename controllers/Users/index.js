@@ -85,8 +85,6 @@ const getProfileList = async (req, res) => {
       };
     }
 
-    console.log(page);
-
     const project = await model.user_detail.findAndCountAll({
       include: [
         {
@@ -230,7 +228,7 @@ const updateProfile = async (req, res) => {
       },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       messages: "update data sucess",
       data: req.body,
     });
@@ -251,14 +249,28 @@ const updateSkills = async (req, res) => {
       process.env.APP_SECRET_KEY
     );
 
+    const removeEmpty = (obj) => {
+      Object.keys(obj).forEach(
+        (k) => !obj[k] && obj[k] !== undefined && delete obj[k]
+      );
+      return obj;
+    };
+
+    let secureUpdate = removeEmpty(req.body);
+
     await model.user_detail.update(
-      {},
+      { skills: JSON.stringify(secureUpdate?.skills ?? []) },
       {
         where: {
           user_id: decode.id,
         },
       }
     );
+
+    res.status(200).json({
+      messages: "update skills sucess",
+      data: secureUpdate?.skills ?? [],
+    });
   } catch (error) {
     res.status(error?.code ?? 500).json({
       messages: error?.message ?? "Something error on server",
@@ -273,4 +285,5 @@ module.exports = {
   getProfileById,
   sendInvitation,
   updateProfile,
+  updateSkills,
 };

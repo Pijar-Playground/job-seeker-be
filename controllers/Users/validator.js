@@ -14,4 +14,7 @@ module.exports = {
     company: "string|minLength:3|maxLength:200",
     description: "required|minLength:10|maxLength:200",
   },
+  updateSkills: {
+    skills: "array|required",
+  },
 };
