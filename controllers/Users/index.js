@@ -41,7 +41,7 @@ const getProfile = async (req, res) => {
         },
         {
           model: model.portfolio,
-          attributes: { exclude: ["user_id"] },
+          // attributes: { exclude: ["user_id"] },
         },
         {
           model: model.work_experience,

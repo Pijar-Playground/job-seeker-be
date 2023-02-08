@@ -13,10 +13,15 @@ const addWorkExp = async (req, res) => {
       process.env.APP_SECRET_KEY
     );
 
+    // search
+    const findUserDetail = await model.user_detail.findOne({
+      where: { user_id: decode?.id },
+    });
+
     // insert into db
     const insertPortfolio = await model.work_experience.create({
       ...req.body,
-      ...{ user_id: decode?.id },
+      ...{ user_id: findUserDetail?.dataValues?.id },
     });
 
     res.status(201).json({
