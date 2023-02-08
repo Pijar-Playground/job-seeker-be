@@ -33,7 +33,7 @@ const getProfile = async (req, res) => {
     });
 
     const result = await model.user_detail.findAll({
-      where: { id: decode?.id },
+      where: { user_id: decode?.id },
       include: [
         {
           model: model.users,
@@ -171,13 +171,13 @@ const getProfileById = async (req, res) => {
     });
 
     const result = await model.user_detail.findAll({
-      where: { id },
+      where: { user_id: id },
       include: [
         {
           model: model.users,
           attributes: { exclude: ["password"] },
           where: {
-            recruiter_id: 0,
+            recrhuiter_id: 0,
           },
         },
         {
