@@ -177,7 +177,7 @@ const getProfileById = async (req, res) => {
           model: model.users,
           attributes: { exclude: ["password"] },
           where: {
-            recrhuiter_id: 0,
+            recruiter_id: 0,
           },
         },
         {
