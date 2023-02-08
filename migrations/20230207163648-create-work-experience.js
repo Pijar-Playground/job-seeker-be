@@ -24,6 +24,11 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
       },
+      logo: {
+        type: Sequelize.STRING,
+        defaultValue:
+          "https://www.pngitem.com/pimgs/m/78-788231_icon-blue-company-icon-png-transparent-png.png",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
