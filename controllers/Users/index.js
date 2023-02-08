@@ -188,7 +188,7 @@ const getProfileById = async (req, res) => {
     });
 
     const result = await model.user_detail.findAll({
-      where: { user_id: id },
+      where: { id: id },
       include: [
         {
           model: model.users,

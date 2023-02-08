@@ -29,9 +29,17 @@ const login = async (req, res) => {
       expiresIn: "24h",
     });
 
+    // search
+    const findUserDetail = await model.user_detail.findOne({
+      where: { user_id: check?.dataValues?.id },
+    });
+
     res.status(201).json({
       messages: "Login success",
-      data: check,
+      data: {
+        ...check?.dataValues,
+        ...{ user_id: findUserDetail.dataValues?.id },
+      },
       token: token,
     });
   } catch (error) {
