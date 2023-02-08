@@ -8,6 +8,11 @@ module.exports = [
     method: "get",
   },
   {
+    path: `${version}/user/invitation/:id`,
+    controllers: require("../controllers/Invitation").getInvitationById,
+    method: "get",
+  },
+  {
     path: `${version}/user/profile`,
     controllers: require("../controllers/Users").updateProfile,
     validator: require("../controllers/Users/validator").updateProfile,
@@ -20,9 +25,9 @@ module.exports = [
     method: "patch",
   },
   {
-    path: `${version}/user/send-invitation`,
-    controllers: require("../controllers/Users").sendInvitation,
-    validator: require("../controllers/Users/validator").sendInvitation,
+    path: `${version}/user/invitation`,
+    controllers: require("../controllers/Invitation").sendInvitation,
+    validator: require("../controllers/Invitation/validator").sendInvitation,
     method: "post",
   },
   {

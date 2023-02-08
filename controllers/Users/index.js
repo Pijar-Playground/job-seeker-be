@@ -32,6 +32,12 @@ const getProfile = async (req, res) => {
       },
     });
 
+    model.user_detail.hasMany(model.hire_history, {
+      foreignKey: {
+        name: "user_id",
+      },
+    });
+
     const result = await model.user_detail.findAll({
       where: { user_id: decode?.id },
       include: [
@@ -41,7 +47,18 @@ const getProfile = async (req, res) => {
         },
         {
           model: model.portfolio,
-          // attributes: { exclude: ["user_id"] },
+          attributes: { exclude: ["user_id"] },
+        },
+        {
+          model: model.hire_history,
+          attributes: {
+            exclude: ["user_id"],
+            where: {
+              is_read: {
+                [Op.eq]: false,
+              },
+            },
+          },
         },
         {
           model: model.work_experience,
@@ -203,34 +220,6 @@ const getProfileById = async (req, res) => {
   }
 };
 
-// POST
-const sendInvitation = async (req, res) => {
-  try {
-    const authorization = req.headers.authorization;
-
-    const decode = jwt.verify(
-      authorization.slice(6).trim(),
-      process.env.APP_SECRET_KEY
-    );
-
-    // insert into db
-    const insertInvitation = await model.hire_history.create({
-      ...req.body,
-      ...{ recruiter_id: decode?.id },
-    });
-
-    res.status(201).json({
-      messages: "insert success",
-      data: insertInvitation,
-    });
-  } catch (error) {
-    res.status(error?.code ?? 500).json({
-      messages: error?.message ?? "Something error on server",
-      data: null,
-    });
-  }
-};
-
 // UPDATE
 const updateProfile = async (req, res) => {
   try {
@@ -324,7 +313,6 @@ module.exports = {
   getProfile,
   getProfileList,
   getProfileById,
-  sendInvitation,
   updateProfile,
   updateSkills,
 };
