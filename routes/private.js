@@ -31,6 +31,11 @@ module.exports = [
     method: "post",
   },
   {
+    path: `${version}/user/invitation-sender`,
+    controllers: require("../controllers/Invitation").getInvitationBySender,
+    method: "get",
+  },
+  {
     path: `${version}/user/portfolio`,
     controllers: require("../controllers/Portfolios").addPortfolio,
     validator: require("../controllers/Portfolios/validator").addPortfolio,

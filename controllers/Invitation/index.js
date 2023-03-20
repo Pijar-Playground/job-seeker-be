@@ -43,6 +43,31 @@ const getInvitationById = async (req, res) => {
   }
 };
 
+const getInvitationBySender = async (req, res) => {
+ try {
+   const authorization = req.headers.authorization;
+
+   const decode = jwt.verify(
+     authorization.slice(6).trim(),
+     process.env.APP_SECRET_KEY
+   );
+
+   const result = await model.hire_history.findAll({
+     where: { recruiter_id: decode?.id },
+   });
+
+   res.status(200).json({
+     messages: "get data sucess",
+     data: result,
+   });
+ } catch (error) {
+   res.status(error?.code ?? 500).json({
+     messages: error?.message ?? "Something error on server",
+     data: null,
+   });
+ }
+}
+
 // POST
 const sendInvitation = async (req, res) => {
   try {
@@ -79,4 +104,5 @@ const sendInvitation = async (req, res) => {
 module.exports = {
   getInvitationById,
   sendInvitation,
+  getInvitationBySender,
 };
